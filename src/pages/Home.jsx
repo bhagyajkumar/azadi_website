@@ -74,7 +74,7 @@ const Home = () => {
                                         <Card.Footer>
                                             <Row>
                                                 <Col>
-                                                    <a className="btn btn-primary" href={""} target="_blank" rel="noopener noreferrer">Download</a>
+                                                    <Button>Download</Button>
                                                 </Col>
                                             </Row>
                                         </Card.Footer>
