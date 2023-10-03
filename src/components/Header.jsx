@@ -4,12 +4,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useModalStore } from '../lib/zustand';
 import { auth } from "../lib/firebase"
-import { signOut } from "firebase/auth";
 import { useEffect, useState } from 'react';
 
 
 function Header() {
-  const { currentModal, isModalVisible, openModal, closeModal, currentUsername } = useModalStore()
+  const { openModal } = useModalStore()
   const [currentUser, setCurrentUser] = useState(null)
 
 

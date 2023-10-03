@@ -1,9 +1,9 @@
-import { Modal, Button } from "react-bootstrap"
+import { Modal } from "react-bootstrap"
 import { useModalStore } from "../lib/zustand"
 import SigninModal from "../components/modals/SigninModal"
 
 const Modals = () => {
-    const { currentModal, isModalVisible, openModal, closeModal } = useModalStore()
+    const { currentModal, isModalVisible, closeModal } = useModalStore()
     
     return (
         <Modal show={isModalVisible} onHide={()=>closeModal()}>

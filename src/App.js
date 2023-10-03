@@ -1,8 +1,7 @@
-import { useState } from "react";
+
 import Header from "./components/Header";
-import { useModalStore } from "./lib/zustand";
 import Modals from "./components/Modals";
-import { Routes, Route, Outlet, Link } from "react-router-dom";
+import { Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
 
 
