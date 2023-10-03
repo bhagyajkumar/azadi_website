@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
 import { Alert, Badge, Card, Container, Row, Col, Button } from "react-bootstrap"
-import { firestore, storage } from "../lib/firebase"
+import { firestore } from "../lib/firebase"
 import { collection, getDocs } from "firebase/firestore"
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 
 const Home = () => {
@@ -21,16 +20,17 @@ const Home = () => {
     useEffect(
         () => {
             fetchRecentPosts()
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     )
 
-    const getDownloadLink = (id)=>{
-        return getDownloadURL(ref(storage, `${id}.pdf`)).then(
-            (val)=>{
-                return val
-            }
-        )
-    }
+    // const getDownloadLink = (id)=>{
+    //     return getDownloadURL(ref(storage, `${id}.pdf`)).then(
+    //         (val)=>{
+    //             return val
+    //         }
+    //     )
+    // }
 
     return (
         <Container>
@@ -62,7 +62,7 @@ const Home = () => {
                                         <Card.Body>
                                             <Row>
                                                 <Col style={{ flex: 0 }}>
-                                                    <img width={50} src="https://png.pngtree.com/png-clipart/20220612/original/pngtree-pdf-file-icon-png-png-image_7965915.png"></img>
+                                                    <img alt="test" width={50} src="https://png.pngtree.com/png-clipart/20220612/original/pngtree-pdf-file-icon-png-png-image_7965915.png"></img>
                                                 </Col>
                                                 <Col style={{ paddingLeft: "0%", flex: 1 }}>
                                                     <h3>
