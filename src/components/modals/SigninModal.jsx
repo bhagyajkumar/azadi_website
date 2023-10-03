@@ -8,7 +8,7 @@ const SigninModal = ()=>{
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    const {setCurrentUsername, closeModal} = useModalStore()
+    const { closeModal} = useModalStore()
     return(
         <div>
             <Form>
@@ -18,14 +18,12 @@ const SigninModal = ()=>{
                     signInWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
                       // Signed in 
-                      const user = userCredential.user;
                       closeModal()
                       
                       // ...
                     })
                     .catch((error) => {
-                      const errorCode = error.code;
-                      const errorMessage = error.message;
+                      alert("error occured while loging in")
                     });
                   
                 }}>Login</Button>
