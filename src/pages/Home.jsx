@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react"
 import { Alert, Badge, Card, Container, Row, Col, Button } from "react-bootstrap"
-import { firestore } from "../lib/firebase"
+import { firestore, storage } from "../lib/firebase"
 import { collection, getDocs } from "firebase/firestore"
+import { ref, getDownloadURL } from "firebase/storage";
 
 
 const Home = () => {
 
-    const [recentPosts, setRecentPosts] = useState([{ "College Name": "sdnfsdfkskdjfh" }])
+    const [recentPosts, setRecentPosts] = useState([])
 
     const fetchRecentPosts = async () => {
         getDocs(collection(firestore, "Question Papers"))
@@ -74,7 +75,14 @@ const Home = () => {
                                         <Card.Footer>
                                             <Row>
                                                 <Col>
-                                                    <Button>Download</Button>
+                                                    <Button onClick={()=>{
+                                                        getDownloadURL(ref(storage, `${item["id"]}.pdf`)).then(
+                                                            (url)=>{
+                                                                window.open(url, "_blank")
+                                                            }
+                                                        )
+                                                        
+                                                    }}>Download</Button>
                                                 </Col>
                                             </Row>
                                         </Card.Footer>
