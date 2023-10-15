@@ -3,6 +3,7 @@ import { Button, Container } from "react-bootstrap"
 import { storage, firestore } from "../lib/firebase";
 import { addDoc, collection } from "firebase/firestore"; 
 import { Timestamp } from "@firebase/firestore";
+import { auth } from "../lib/firebase";
 import {
     ref,
     uploadBytesResumable,
@@ -10,13 +11,18 @@ import {
 } from "firebase/storage";
 import { Card } from "react-bootstrap"
 import { v4 as uuidv4 } from 'uuid';
+import { useModalStore } from "../lib/zustand";
 
 const UploadPage = () => {
 
     const [title, setTitle] = useState("");
+    const [subject, setSubject] = useState("");
     const [year, setYear] = useState(1);
     const [file, setFile] = useState("");
     const [keyWords, setKeyWords] = useState([])
+    const [branch, setBranch] = useState("CSE")
+
+    const { setUploadPercent, closeModal, openModal } = useModalStore()
 
     return (
         <Container>
@@ -28,6 +34,26 @@ const UploadPage = () => {
                     <input onChange={(e) => {
                         setTitle(e.target.value)
                     }} placeholder="title" className="form-control" value={title}></input>
+                    <br />
+
+                    <label for="branch-select">Select Branch</label>
+
+                    <select onChange={(e) => {
+                        setBranch(e.target.value)
+                    }} class="form-control" id="branch-select">
+                        <option>CSE</option>
+                        <option>IT</option>
+                        <option>ECE</option>
+                        <option>MECH</option>
+                        <option>CIVIL</option>
+                        <option>EEE</option>
+                    </select>
+                    <br />
+
+                    <input onChange={(e)=>{
+                        setSubject(e.target.value)
+                    }} placeholder="subject" className="form-control" value={subject}></input>
+
                     <br />
                     <label for="exampleFormControlSelect1">Select Year</label>
 
@@ -61,9 +87,13 @@ const UploadPage = () => {
                         uploadTask.on(
                             "state_changed",
                             (snapshot) => {
+                                openModal("upload");
+                                
                                 const percent = Math.round(
                                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                                 );
+
+                                setUploadPercent(percent)
                      
                                 console.log(percent);
                             },
@@ -76,12 +106,16 @@ const UploadPage = () => {
                                         keywords: [...keyWords],
                                         file_location: fileLoc,
                                         year: year,
-                                        uploaded_on: uploadTimeStamp
+                                        uploaded_on: uploadTimeStamp,
+                                        subject: subject,
+                                        branch: branch,
+                                        user_id: auth.currentUser.uid
                                       }
                                     console.log(doc);
                                     addDoc(collection(firestore, "question_papers"), doc)
                                       .then((val)=>{
-                                        console.log(val);
+                                        closeModal();
+                                        alert("The material was successfully uploaded..")
                                       })
                                 });
                             }

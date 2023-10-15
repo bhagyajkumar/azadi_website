@@ -10,12 +10,13 @@ const Home = () => {
     const [recentPosts, setRecentPosts] = useState([])
 
     const fetchRecentPosts = async () => {
-        getDocs(collection(firestore, "Question Papers"))
+        getDocs(collection(firestore, "Notes"))
             .then((snap) => {
                 const resp = snap.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
                 setRecentPosts(resp)
                 console.log(recentPosts);
             })
+        
     }
 
     useEffect(
@@ -67,7 +68,7 @@ const Home = () => {
                                                 </Col>
                                                 <Col style={{ paddingLeft: "0%", flex: 1 }}>
                                                     <h3>
-                                                        {item["Subject Name"]}
+                                                        {item["title"]}
                                                     </h3>
                                                 </Col>
                                             </Row>
@@ -76,7 +77,7 @@ const Home = () => {
                                             <Row>
                                                 <Col>
                                                     <Button onClick={()=>{
-                                                        getDownloadURL(ref(storage, `${item["id"]}.pdf`)).then(
+                                                        getDownloadURL(ref(storage, item["file_location"] || `${item["id"]}.pdf` )).then(
                                                             (url)=>{
                                                                 window.open(url, "_blank")
                                                             }

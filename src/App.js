@@ -4,7 +4,7 @@ import Modals from "./components/Modals";
 import { Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
 import UploadPage from "./pages/UploadPage";
-
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   return (
@@ -14,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/upload" element={ <UploadPage /> }/>
+        <Route path="/search" element={<SearchPage />} />
       </Routes>
       
       <Modals />
