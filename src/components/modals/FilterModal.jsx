@@ -11,8 +11,8 @@ const FilterModal = () => {
     const [currentSemester, setCurrentSemester] = useState(null);
     const [currentBranch, setCurrentBranch] = useState(null);
     const [currentSubject, setCurrentSubject] = useState(null);
-    const [subjects, setSubjects] = useState([{ name: "test" }, { name: "test2" }]);
-    const { currentModal } = useModalStore()
+    const [subjects, setSubjects] = useState([]);
+    const { currentModal, setFilterSubject, closeModal } = useModalStore()
 
     useEffect(() => {
         getDocs(collection(firestore, "branches"))
@@ -23,15 +23,16 @@ const FilterModal = () => {
             })
     }, [currentModal])
 
+    useEffect(() => {
+        console.log(currentBranch);
+        if (currentBranch && currentSemester) {
+            setSubjects(currentBranch.subjects[currentSemester])
+        }
+        console.log(subjects);
+    }, [currentBranch, currentSemester])
+
     const fetchSubjects = () => {
-        getDocs(query(collection(firestore, "subjects")))
-            .then(
-                (snap) => {
-                    const resp = snap.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-                    setSubjects([...resp])
-                    console.log(subjects);
-                }
-            )
+        setSubjects(currentBranch.subjects[currentSemester])
     }
 
     return (
@@ -39,7 +40,7 @@ const FilterModal = () => {
             <InputGroup>
                 <Dropdown>
                     <Dropdown.Toggle variant="primary" id="branch-dropdown">
-                        {currentBranch?.short || "Select Branch"}
+                        {currentBranch?.id || "Select Branch"}
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {
@@ -50,7 +51,7 @@ const FilterModal = () => {
                                             () => {
                                                 setCurrentBranch(item);
                                             }
-                                        }>{item.short}</Dropdown.Item>
+                                        }>{item.id}</Dropdown.Item>
                                     </>
                                 )
                             })
@@ -63,7 +64,10 @@ const FilterModal = () => {
                     </Dropdown.Toggle>
                     <Dropdown.Menu>
                         {
-                            [1, 2, 3, 4, 5, 6, 7, 8].map((sem) => {
+
+                            currentBranch &&
+
+                            Object.keys(currentBranch.subjects).map((sem) => {
                                 return (
                                     <Dropdown.Item key={sem} onClick={
                                         () => {
@@ -75,18 +79,9 @@ const FilterModal = () => {
                         }
                     </Dropdown.Menu>
                 </Dropdown>
-                <Button disabled={currentSemester === null || currentBranch === null} variant="success" onClick={fetchSubjects}>Fetch Subjects</Button>
+
             </InputGroup>
             <br />
-
-            {subjects.map(
-                (sub) => {
-                    {
-                        <>sub.name</>
-                    }
-                }
-            )}
-
             <Dropdown>
                 <Dropdown.Toggle variant="primary" id="subject-dropdown">
                     {currentSubject || "Select Subject"}
@@ -96,8 +91,10 @@ const FilterModal = () => {
                         subjects.map(
                             (sub) => {
                                 return (
-                                    <Dropdown.Item>
-                                        {sub.name}
+                                    <Dropdown.Item onClick={
+                                        () => setCurrentSubject(sub)
+                                    }>
+                                        {sub}
                                     </Dropdown.Item>
                                 )
                             }
@@ -105,6 +102,13 @@ const FilterModal = () => {
                     }
                 </Dropdown.Menu>
             </Dropdown>
+            <br /> 
+            <Button onClick={
+                ()=>{
+                    setFilterSubject(currentSubject);
+                    closeModal();
+                }
+            } disabled={ currentSubject === null } variant="primary">Apply Filter</Button>    
         </div>
     )
 }

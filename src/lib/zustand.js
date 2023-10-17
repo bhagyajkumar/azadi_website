@@ -1,10 +1,12 @@
 import { create } from 'zustand'
 
 const useModalStore = create((set) => ({
-  isModalVisible: true,
-  currentModal: "filter",
+  isModalVisible: false,
+  currentModal: "",
   currentUsername: null,
   uploadPercent: 0,
+
+  filterSubject: null,
 
   openModal: (modalName) => { 
     set((state) => ({ isModalVisible: true, currentModal: modalName }))
@@ -20,7 +22,12 @@ const useModalStore = create((set) => ({
 
   setUploadPercent: (num) =>{
     set((state)=>({uploadPercent: num}))
+  },
+
+  setFilterSubject: (subject)=>{
+    set((state)=>({filterSubject: subject}))
   }
+
 
 }))
 
