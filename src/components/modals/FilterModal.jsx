@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { firestore } from "../../lib/firebase"
-import { collection, getDocs, query } from "firebase/firestore";
-import { Button, Dropdown, DropdownButton, InputGroup } from "react-bootstrap";
+import { collection, getDocs } from "firebase/firestore";
+import { Button, Dropdown, InputGroup } from "react-bootstrap";
 
 import { useModalStore } from "../../lib/zustand";
 
@@ -21,6 +21,7 @@ const FilterModal = () => {
                 setBranches([...resp])
                 console.log(branches);
             })
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentModal])
 
     useEffect(() => {
@@ -29,11 +30,8 @@ const FilterModal = () => {
             setSubjects(currentBranch.subjects[currentSemester])
         }
         console.log(subjects);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentBranch, currentSemester])
-
-    const fetchSubjects = () => {
-        setSubjects(currentBranch.subjects[currentSemester])
-    }
 
     return (
         <div>

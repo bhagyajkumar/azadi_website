@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Button, Container } from "react-bootstrap"
+import { useEffect, useState } from "react";
+import { Button, Container, Dropdown } from "react-bootstrap"
 import { storage, firestore } from "../lib/firebase";
-import { addDoc, collection } from "firebase/firestore"; 
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { Timestamp } from "@firebase/firestore";
 import { auth } from "../lib/firebase";
 import {
     ref,
     uploadBytesResumable,
-    getDownloadURL 
+    getDownloadURL
 } from "firebase/storage";
 import { Card } from "react-bootstrap"
 import { v4 as uuidv4 } from 'uuid';
@@ -16,13 +16,27 @@ import { useModalStore } from "../lib/zustand";
 const UploadPage = () => {
 
     const [title, setTitle] = useState("");
-    const [subject, setSubject] = useState("");
-    const [year, setYear] = useState(1);
     const [file, setFile] = useState("");
     const [keyWords, setKeyWords] = useState([])
-    const [branch, setBranch] = useState("CSE")
-
+    const [currentBranch, setCurrentBranch] = useState();
+    const [branches, setBranches] = useState([]);
+    const [currentSemester, setCurrentSemester] = useState(null);
+    const [currentSubject, setCurrentSubject] = useState(null)
     const { setUploadPercent, closeModal, openModal } = useModalStore()
+
+
+    useEffect(
+        () => {
+            getDocs(collection(firestore, "branches"))
+                .then((snap) => {
+                    const resp = snap.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+                    setBranches([...resp])
+                    console.log(branches);
+                })
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    )
 
     return (
         <Container>
@@ -36,47 +50,85 @@ const UploadPage = () => {
                     }} placeholder="title" className="form-control" value={title}></input>
                     <br />
 
-                    <label for="branch-select">Select Branch</label>
-
-                    <select onChange={(e) => {
-                        setBranch(e.target.value)
-                    }} class="form-control" id="branch-select">
-                        <option>CSE</option>
-                        <option>IT</option>
-                        <option>ECE</option>
-                        <option>MECH</option>
-                        <option>CIVIL</option>
-                        <option>EEE</option>
-                    </select>
+                    <Dropdown>
+                        <Dropdown.Toggle variant="primary" id="branch-dropdown">
+                            {currentBranch?.id || "Select Branch"}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {
+                                branches.map((item) => {
+                                    return (
+                                        <>
+                                            <Dropdown.Item onClick={
+                                                () => {
+                                                    setCurrentBranch(item);
+                                                }
+                                            }>{item.id}</Dropdown.Item>
+                                        </>
+                                    )
+                                })
+                            }
+                        </Dropdown.Menu>
+                    </Dropdown>
                     <br />
 
-                    <input onChange={(e)=>{
-                        setSubject(e.target.value)
-                    }} placeholder="subject" className="form-control" value={subject}></input>
+                    <Dropdown>
+                        <Dropdown.Toggle variant="primary" id="semester-dropdown">
+                            {currentSemester || "Select Semester"}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {
+
+                                currentBranch &&
+
+                                Object.keys(currentBranch.subjects).map((sem) => {
+                                    return (
+                                        <Dropdown.Item key={sem} onClick={
+                                            () => {
+                                                setCurrentSemester(sem)
+                                            }
+                                        }>{sem}</Dropdown.Item>
+                                    )
+                                })
+                            }
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <br />
+
+                    <Dropdown>
+                        <Dropdown.Toggle variant="primary" id="subject-dropdown">
+                            {currentSubject || "Select Subject"}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {
+                                currentBranch?.subjects[currentSemester]?.map(
+                                    (sub) => {
+                                        return (
+                                            <Dropdown.Item onClick={
+                                                () => setCurrentSubject(sub)
+                                            }>
+                                                {sub}
+                                            </Dropdown.Item>
+                                        )
+                                    }
+                                )
+                            }
+                        </Dropdown.Menu>
+                    </Dropdown>
 
                     <br />
-                    <label for="exampleFormControlSelect1">Select Year</label>
 
-                    <select onChange={(e) => {
-                        setYear(e.target.value)
-                    }} class="form-control" id="year-select">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                    </select>
-                    <br />
                     <input type="file" accept="*.pdf" onChange={(e) => {
                         setFile(e.target.files[0])
                     }} />
                     <br />
                     <br />
-                    <input onChange={(e)=>{
+                    <input onChange={(e) => {
                         setKeyWords(e.target.value.split(" "))
                     }} className="form-control" placeholder="keywords"></input>
                     <br />
-                    <Button onClick={()=>{
-                        
+                    <Button onClick={() => {
+
                         const fileId = uuidv4()
                         const fileLoc = `/question_papers/${fileId}`
 
@@ -88,13 +140,13 @@ const UploadPage = () => {
                             "state_changed",
                             (snapshot) => {
                                 openModal("upload");
-                                
+
                                 const percent = Math.round(
                                     (snapshot.bytesTransferred / snapshot.totalBytes) * 100
                                 );
 
                                 setUploadPercent(percent)
-                     
+
                                 console.log(percent);
                             },
                             (err) => console.log(err),
@@ -102,24 +154,24 @@ const UploadPage = () => {
                                 // download url
                                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
                                     const doc = {
-                                        title: title,
-                                        keywords: [...keyWords],
-                                        file_location: fileLoc,
-                                        year: year,
+                                        TopicName: title,
+                                        Keywords: [...keyWords],
+                                        FileLocation: fileLoc,
+                                        Semester: currentSemester,
                                         uploaded_on: uploadTimeStamp,
-                                        subject: subject,
-                                        branch: branch,
-                                        user_id: auth.currentUser.uid
-                                      }
+                                        SubjectName: currentSubject,
+                                        BranchName: currentBranch.id,
+                                        UserId: auth.currentUser.uid
+                                    }
                                     console.log(doc);
-                                    addDoc(collection(firestore, "question_papers"), doc)
-                                      .then((val)=>{
-                                        closeModal();
-                                        alert("The material was successfully uploaded..")
-                                      })
+                                    addDoc(collection(firestore, "Notes"), doc)
+                                        .then((val) => {
+                                            closeModal();
+                                            alert("The material was successfully uploaded..")
+                                        })
                                 });
                             }
-                        ); 
+                        );
                     }}>Upload</Button>
                 </Card.Body>
             </Card>

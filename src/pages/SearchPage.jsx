@@ -21,6 +21,8 @@ const SearchPage = ()=>{
             </div>
 
             { filterSubject }
+
+            
         </Container>
     )
 }
