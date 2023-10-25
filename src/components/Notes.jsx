@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Card, Container } from "react-bootstrap"
+import { Badge, Card, CloseButton, Container } from "react-bootstrap"
 import { firestore } from "../lib/firebase"
 import { collection, getDocs } from "firebase/firestore"
 import PostCard from "../components/PostCard";
@@ -10,7 +10,8 @@ import filterIcon from "../assets/filter.svg"
 const Notes = () => {
 
     const [recentPosts, setRecentPosts] = useState([])
-    const { openModal } = useModalStore();
+    const [filteredNotes, setFilteredNotes] = useState([])
+    const { openModal, filterSubject, setFilterSubject } = useModalStore();
 
     const fetchRecentPosts = async () => {
         getDocs(collection(firestore, "Notes"))
@@ -22,16 +23,39 @@ const Notes = () => {
 
     }
 
+    useEffect(() => {
+        let temp = []
+        console.log(recentPosts);
+        recentPosts.forEach((item) => {
+            console.log(item);
+            if (item.SubjectName === filterSubject) {
+                temp = [...temp, item]
+            }
+        })
+
+        if (filterSubject === null) {
+            setFilteredNotes([...recentPosts])
+        } else {
+            setFilteredNotes([...temp])
+        }
+    }, [filterSubject, recentPosts])
+
+
     useEffect(
         () => {
             fetchRecentPosts()
+            setFilteredNotes([...recentPosts])
+            console.log(filteredNotes);
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     )
+
     return (
         <Container>
-
             <br />
+            <div>
+
+            </div>
             <div className="input-group">
                 <input placeholder="Search.." className="form-control" type="text" />
                 <Button>Search</Button>
@@ -43,24 +67,37 @@ const Notes = () => {
 
             </div>
             <br />
+            {
+                filterSubject !== null &&
+                <>
+                    Applied filters:
+                    <Badge className="badge-primary"> {filterSubject} <CloseButton onClick={
+                        () => {
+                            setFilterSubject(null)
+                        }
+                    } /></Badge>
+                    <br />
+                    <br />
+                </>
+
+            }
 
             <Card >
                 <Card.Header>
-                    <h3>Recent Uploads</h3>
+                    <h3>Notes</h3>
                 </Card.Header>
                 <Card.Body>
                     {
-                        recentPosts.map(
+                        filteredNotes.map(
                             (item) => {
                                 return (
-                                    <>
-                                        <PostCard
-                                            SubjectName={item["SubjectName"]}
-                                            title={item["TopicName"]}
-                                            fileLocation={item["FileLocation"]}
-                                            id={item["id"]}
-                                        />
-                                    </>
+                                    <PostCard
+                                        key={item.id}
+                                        SubjectName={item["SubjectName"]}
+                                        title={item["TopicName"]}
+                                        fileLocation={item["FileLocation"]}
+                                        id={item["id"]}
+                                    />
                                 )
                             }
                         )
