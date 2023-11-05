@@ -13,7 +13,7 @@ import { Card } from "react-bootstrap"
 import { v4 as uuidv4 } from 'uuid';
 import { useModalStore } from "../lib/zustand";
 
-const UploadPage = () => {
+const UploadNotes = () => {
 
     const [title, setTitle] = useState("");
     const [file, setFile] = useState("");
@@ -181,4 +181,4 @@ const UploadPage = () => {
     )
 }
 
-export default UploadPage
+export default UploadNotes

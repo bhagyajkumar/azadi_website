@@ -3,9 +3,11 @@ import Header from "./components/Header";
 import Modals from "./components/Modals";
 import { Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
-import UploadPage from "./pages/UploadPage";
+import UploadNotes from "./pages/UploadNotes";
 import SearchPage from "./pages/SearchPage";
-import Notes from "./components/Notes";
+import Notes from "./pages/Notes";
+import UploadQP from "./pages/UploadQP";
+import QuestionPapers from "./pages/QuestionPapers";
 
 function App() {
   return (
@@ -15,7 +17,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}/>
         <Route path="/notes" element={ <Notes /> } />
-        <Route path="/upload" element={ <UploadPage /> }/>
+        <Route path="/notes/upload" element={ <UploadNotes /> }/>
+        <Route path="/qp" element={<QuestionPapers />}/>
+        <Route path="/qp/upload" element={<UploadQP />}/>
         <Route path="/search" element={<SearchPage />} />
       </Routes>
       

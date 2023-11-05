@@ -1,8 +1,7 @@
-import { Card, Button } from "react-bootstrap"
-import { Link, useNavigate } from "react-router-dom"
+import { Card } from "react-bootstrap"
+import { Link } from "react-router-dom"
 
 const HomeContents = () => {
-    const navigate = useNavigate()
     return (
         <>
         <br />
@@ -12,7 +11,7 @@ const HomeContents = () => {
                 </Card.Header>
                 <Card.Body>
                     <Link to="/notes" className="btn btn-primary">Browse Notes</Link>
-                    <Button variant="secondary" className="mx-2">Contribute</Button>
+                    <Link to="/notes/upload" className="btn btn-secondary mx-2">Contribute Notes</Link>
                 </Card.Body>
             </Card>
             <br />
@@ -21,8 +20,8 @@ const HomeContents = () => {
                     <h1>Question Papers</h1>
                 </Card.Header>
                 <Card.Body>
-                    <Button>Browse Question Papers</Button>
-                    <Button variant="secondary" className="mx-2">Contribute</Button>
+                <Link to="/qp" className="btn btn-primary">Browse Question Papers</Link>
+                    <Link to="/qp/upload" className="btn btn-secondary mx-2">Contribute Question Papers</Link>
                 </Card.Body>
             </Card>
         </>
