@@ -5,6 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useModalStore } from '../lib/zustand';
 import { auth } from "../lib/firebase"
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 
 function Header() {
@@ -12,11 +13,11 @@ function Header() {
   const [currentUser, setCurrentUser] = useState(null)
 
 
-  useEffect(()=>{
-    auth.onAuthStateChanged(()=>{
+  useEffect(() => {
+    auth.onAuthStateChanged(() => {
       setCurrentUser(auth.currentUser)
     })
-  },[])
+  }, [])
 
 
 
@@ -27,13 +28,14 @@ function Header() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
+            <Link to="/" className="nav-link">Home</Link>
+            <Link to="/notes" className="nav-link">Notes</Link>
+            <Link to="/qp" className="nav-link">Question Papers</Link>
             {
               auth.currentUser ?
                 <NavDropdown title={currentUser?.email} id="basic-nav-dropdown">
                   <NavDropdown.Item onClick={() => {
-                    auth.signOut().then(()=>{
+                    auth.signOut().then(() => {
                       setCurrentUser(null)
                     })
                   }}>logout</NavDropdown.Item>

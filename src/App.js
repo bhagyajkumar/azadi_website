@@ -8,6 +8,7 @@ import SearchPage from "./pages/SearchPage";
 import Notes from "./pages/Notes";
 import UploadQP from "./pages/UploadQP";
 import QuestionPapers from "./pages/QuestionPapers";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/qp" element={<QuestionPapers />}/>
         <Route path="/qp/upload" element={<UploadQP />}/>
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
       
       <Modals />
