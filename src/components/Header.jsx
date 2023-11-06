@@ -38,14 +38,14 @@ function Header() {
                     auth.signOut().then(() => {
                       setCurrentUser(null)
                     })
-                  }}>logout</NavDropdown.Item>
+                  }}><p className='nav-link text-light'>logout</p></NavDropdown.Item>
                 </NavDropdown>
                 :
                 <NavDropdown title="Account" id="basic-nav-dropdown">
                   <NavDropdown.Item onClick={() => {
                     openModal("login")
                   }}>Login</NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.2">Signup</NavDropdown.Item>
+                  <NavDropdown.Item><Link className='text-light' style={{textDecoration: "none"}} to="/signup">Signup</Link></NavDropdown.Item>
                 </NavDropdown>
             }
 
