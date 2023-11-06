@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Badge, Card, CloseButton, Container } from "react-bootstrap"
 import { firestore } from "../lib/firebase"
 import { collection, getDocs } from "firebase/firestore"
@@ -12,6 +12,8 @@ const QuestionPapers = () => {
     const [recentPosts, setRecentPosts] = useState([])
     const [filteredQuestionPapers, setFilteredQuestionPapers] = useState([])
     const { openModal, filterSubject, setFilterSubject } = useModalStore();
+    const [searchKeyword, setSearchKeyWord] = useState(null);
+    const searchRef = useRef("")
 
     const fetchRecentPosts = async () => {
         getDocs(collection(firestore, "QuestionPapers"))
@@ -40,6 +42,24 @@ const QuestionPapers = () => {
         }
     }, [filterSubject, recentPosts])
 
+    useEffect(() => {
+        let temp = []
+        console.log(recentPosts);
+        recentPosts.forEach((item) => {
+            console.log(item);
+            console.log(item.Keywords);
+            if(item.Keywords?.includes(searchKeyword)) {
+                temp = [...temp, item]
+            }
+        })
+
+        if (searchKeyword === null) {
+            setFilteredQuestionPapers([...recentPosts])
+        } else {
+            setFilteredQuestionPapers([...temp])
+        }
+    }, [searchKeyword, recentPosts])
+
 
     useEffect(
         () => {
@@ -57,8 +77,12 @@ const QuestionPapers = () => {
 
             </div>
             <div className="input-group">
-                <input placeholder="Search.." className="form-control" type="text" />
-                <Button>Search</Button>
+                <input ref={searchRef} placeholder="Search.." className="form-control" type="text" />
+                <Button onClick={
+                    ()=>{
+                        setSearchKeyWord(searchRef.current.value);
+                    }
+                }>Search</Button>
                 <Button variant="warning" onClick={
                     () => {
                         openModal("filter");
@@ -67,6 +91,7 @@ const QuestionPapers = () => {
 
             </div>
             <br />
+
             {
                 filterSubject !== null &&
                 <>
@@ -80,6 +105,21 @@ const QuestionPapers = () => {
                     <br />
                 </>
 
+            }
+
+            {
+                searchKeyword !== null &&
+                <>
+                    Search filters:
+                    <Badge className="badge-primary"> {searchKeyword} <CloseButton onClick={
+                        () => {
+                            searchRef.current.value = ""
+                            setSearchKeyWord(null)
+                        }
+                    } /></Badge>
+                    <br />
+                    <br />
+                </>
             }
 
             <Card >
