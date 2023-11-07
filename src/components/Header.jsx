@@ -39,7 +39,7 @@ function Header() {
                       auth.signOut().then(() => {
                         setCurrentUser(null)
                       })
-                    }}><p className='nav-link text-light'>logout</p></NavDropdown.Item>
+                    }}><p className='nav-link text-dark'>logout</p></NavDropdown.Item>
                   </NavDropdown>
                   :
                   <NavDropdown title="Account" id="basic-nav-dropdown">

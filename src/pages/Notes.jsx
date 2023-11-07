@@ -108,6 +108,20 @@ const Notes = () => {
                 </>
 
             }
+            {
+                searchKeyword !== null &&
+                <>
+                    Search filters:
+                    <Badge className="badge-primary"> {searchKeyword} <CloseButton onClick={
+                        () => {
+                            searchRef.current.value = ""
+                            setSearchKeyWord(null)
+                        }
+                    } /></Badge>
+                    <br />
+                    <br />
+                </>
+            }
 
             <Card >
                 <Card.Header>
