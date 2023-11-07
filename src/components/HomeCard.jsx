@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, Col, Row } from 'react-bootstrap'
-import AzLogo from "../assets/hand.png"
+import HandLogo from "../assets/hand.png"
+import Azlogo from "../assets/logo2.png"
 
 function HomeCard() {
   return (
@@ -8,10 +9,10 @@ function HomeCard() {
             <Card.Body>
                 <Row style={{marginTop: "60px", marginBottom: "60px"}}>
                     <Col className='sm-hidden'> 
-                        <img alt= "logo" style={{width: "380px", maxWidth: "80vw"}} src={AzLogo}></img>
+                        <img alt= "logo" style={{width: "380px", maxWidth: "80vw"}} src={HandLogo}></img>
                     </Col>
                     <Col style={{minWidth: "50px"}}>
-                        <h1 style={{color: "red"}}>Azaadi </h1><h1> CUCEK</h1>
+                        <img alt='logo2' src={Azlogo} style={{width: "380px", maxWidth: "80vw"}}></img>
                         <p style={{fontWeight: 400, fontSize: "19px"}}>
                         At AAZADI CUCEK, we are committed to providing comprehensive academic support, fostering competitive exam preparation, offering invaluable placement assistance, and guiding you through the intricate process of pursuing education abroad. Our dedicated team, backed by the esteemed SFI CUCEK community, aims to empower and equip you with the tools you need to excel in your educational journey.
 

@@ -8,21 +8,18 @@ const HomeContents = () => {
         {
             imageUrl: 'https://placehold.co/600x400/EEE/31343C',
             title: 'Article 1',
-            subtitle: 'This is the subtitle for article 1',
             description: 'This is a short description of article 1.',
             url: 'https://example.com/news/article-1',
         },
         {
             imageUrl: 'https://placehold.co/600x400/EEE/31343C',
             title: 'Article 2',
-            subtitle: 'This is the subtitle for article 2',
             description: 'This is a short description of article 2.',
             url: 'https://example.com/news/article-2',
         },
         {
             imageUrl: 'https://placehold.co/600x400/EEE/31343C',
             title: 'Article 3',
-            subtitle: 'This is the subtitle for article 3',
             description: 'This is a short description of article 3.',
             url: 'https://example.com/news/article-3',
         },
