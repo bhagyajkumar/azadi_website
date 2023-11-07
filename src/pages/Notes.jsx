@@ -6,6 +6,7 @@ import PostCard from "../components/PostCard";
 import { useModalStore } from "../lib/zustand"
 import { Button } from "react-bootstrap";
 import filterIcon from "../assets/filter.svg"
+import SkeletonPostCard from "../components/skeletons/SkeletonPostCard";
 
 const Notes = () => {
 
@@ -14,6 +15,7 @@ const Notes = () => {
     const { openModal, filterSubject, setFilterSubject } = useModalStore();
     const [searchKeyword, setSearchKeyWord] = useState(null);
     const searchRef = useRef("")
+    const [loading, setLoading] = useState(true)
 
     const fetchRecentPosts = async () => {
         getDocs(collection(firestore, "Notes"))
@@ -21,7 +23,9 @@ const Notes = () => {
                 const resp = snap.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
                 setRecentPosts(resp)
                 console.log(recentPosts);
+                setLoading(false)
             })
+
 
     }
 
@@ -65,7 +69,6 @@ const Notes = () => {
         () => {
             fetchRecentPosts()
             setFilteredNotes([...recentPosts])
-            console.log(filteredNotes);
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []
     )
@@ -111,6 +114,21 @@ const Notes = () => {
                     <h3>Notes</h3>
                 </Card.Header>
                 <Card.Body>
+                    {
+                        loading &&
+                        <>
+                            {
+                                Array(5).fill(0).map(
+                                    (val, idx) => {
+                                        return (
+                                            <SkeletonPostCard key={idx} />
+                                        )
+                                    }
+                                )
+                            }
+
+                        </>
+                    }
                     {
                         filteredNotes.map(
                             (item) => {

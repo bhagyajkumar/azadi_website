@@ -6,6 +6,7 @@ import PostCard from "../components/PostCard";
 import { useModalStore } from "../lib/zustand"
 import { Button } from "react-bootstrap";
 import filterIcon from "../assets/filter.svg"
+import SkeletonPostCard from "../components/skeletons/SkeletonPostCard";
 
 const QuestionPapers = () => {
 
@@ -14,12 +15,14 @@ const QuestionPapers = () => {
     const { openModal, filterSubject, setFilterSubject } = useModalStore();
     const [searchKeyword, setSearchKeyWord] = useState(null);
     const searchRef = useRef("")
+    const [loading, setLoading] = useState(true)
 
     const fetchRecentPosts = async () => {
         getDocs(collection(firestore, "QuestionPapers"))
             .then((snap) => {
                 const resp = snap.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
                 setRecentPosts(resp)
+                setLoading(false)
                 console.log(recentPosts);
             })
 
@@ -48,7 +51,7 @@ const QuestionPapers = () => {
         recentPosts.forEach((item) => {
             console.log(item);
             console.log(item.Keywords);
-            if(item.Keywords?.includes(searchKeyword)) {
+            if (item.Keywords?.includes(searchKeyword)) {
                 temp = [...temp, item]
             }
         })
@@ -79,7 +82,7 @@ const QuestionPapers = () => {
             <div className="input-group">
                 <input ref={searchRef} placeholder="Search.." className="form-control" type="text" />
                 <Button onClick={
-                    ()=>{
+                    () => {
                         setSearchKeyWord(searchRef.current.value);
                     }
                 }>Search</Button>
@@ -127,6 +130,21 @@ const QuestionPapers = () => {
                     <h3>QuestionPapers</h3>
                 </Card.Header>
                 <Card.Body>
+                    {
+                        loading &&
+                        <>
+                            {
+                                Array(5).fill(0).map(
+                                    (val, idx) => {
+                                        return (
+                                            <SkeletonPostCard key={idx} />
+                                        )
+                                    }
+                                )
+                            }
+
+                        </>
+                    }
                     {
                         filteredQuestionPapers.map(
                             (item) => {
