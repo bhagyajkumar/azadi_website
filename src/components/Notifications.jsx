@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Card, CardGroup } from 'react-bootstrap';
+import { Alert,  CardGroup } from 'react-bootstrap';
 
 const Notifications = ({ news }) => {
 
