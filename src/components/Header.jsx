@@ -6,7 +6,7 @@ import { useModalStore } from '../lib/zustand';
 import { auth } from "../lib/firebase"
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import Logo from "../assets/logo2.png"
 
 function Header() {
   const { openModal } = useModalStore()
@@ -24,7 +24,7 @@ function Header() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container >
-        <Navbar.Brand href="#home">AZAADI CUCEK</Navbar.Brand>
+        <Navbar.Brand href='/'><img style={{width: "100px"}} src={Logo} alt='lgo-1'></img></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <div className="justify-content-end">
           <Navbar.Collapse id="basic-navbar-nav" >
